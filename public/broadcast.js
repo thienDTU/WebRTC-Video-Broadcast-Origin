@@ -1,7 +1,7 @@
 const peerConnections = {};
 const config = {
   iceServers: [
-    { 
+    {
       "urls": "stun:stun.l.google.com:19302",
     },
     // { 
@@ -90,15 +90,25 @@ function getStream() {
     });
   }
   const audioSource = audioSelect.value;
-  const videoSource = videoSelect.value;
+  const videoSource = videoSelect.value || 'screen';
   const constraints = {
     audio: { deviceId: audioSource ? { exact: audioSource } : undefined },
     video: { deviceId: videoSource ? { exact: videoSource } : undefined }
   };
-  return navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then(gotStream)
-    .catch(handleError);
+  if (videoSource === 'screen') {
+    console.log("screen")
+    return getScreen()
+      .then(gotStream)
+      .catch(handleError);
+  } else
+    return navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then(gotStream)
+      .catch(handleError);
+}
+
+function getScreen() {
+  return navigator.mediaDevices.getDisplayMedia({ video: true });
 }
 
 function gotStream(stream) {

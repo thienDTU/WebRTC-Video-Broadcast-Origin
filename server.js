@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 
-let broadcaster;
 const port = 4000;
 
 const http = require("http");
@@ -11,6 +10,7 @@ const io = require("socket.io")(server);
 app.use(express.static(__dirname + "/public"));
 
 io.sockets.on("error", e => console.log(e));
+let broadcaster;
 io.sockets.on("connection", socket => {
   socket.on("broadcaster", () => {
     broadcaster = socket.id;
